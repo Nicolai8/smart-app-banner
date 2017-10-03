@@ -61,6 +61,8 @@ Based on 'jQuery Smart Banner' by Arnold Daniels <arnold@jasny.net> https://gith
 </html>
 ```
 
+Note: to hide banner on some platform just remove it from **store**.
+
 ## Development
 
 The following commands are available for compiling the project:

@@ -15,10 +15,10 @@ var root = doc && doc.documentElement;
 // platform dependent functionality
 var mixins = {
 	ios: {
-		appMeta: 'apple-itunes-app',
+		appMeta: 'apple-itunes-app-custom',
 		iconRels: ['apple-touch-icon-precomposed', 'apple-touch-icon'],
 		getStoreLink: function () {
-			return 'https://itunes.apple.com/' + this.options.appStoreLanguage + '/app/id' + this.appId + "?mt=8";
+			return 'https://itunes.apple.com/' + this.options.appStoreLanguage + '/app/id' + this.appId + '?mt=8';
 		}
 	},
 	android: {
@@ -45,9 +45,9 @@ var SmartBanner = function (options) {
 		appStoreLanguage: userLang, // Language code for App Store
 		button: 'OPEN', // Text for the install button
 		store: {
-			ios: 'On the App Store',
-			android: 'In Google Play',
-			windows: 'In the Windows Store'
+			ios: ' - On the App Store',
+			android: ' - In Google Play',
+			windows: ' - In the Windows Store'
 		},
 		price: {
 			ios: 'FREE',
@@ -75,9 +75,9 @@ var SmartBanner = function (options) {
 	// - user is on mobile safari for ios 6 or greater (iOS >= 6 has native support for SmartAppBanner)
 	// - running on standalone mode
 	// - user dismissed banner
-	var unsupported = !this.type || !this.options.store[this.type];
+	var unsupported = !this.type || typeof this.options.store[this.type] === 'undefined';
 	var isMobileSafari = (this.type === 'ios' && agent.browser.name === 'Mobile Safari' && parseInt(agent.os.version, 10) >= 6);
-  
+
 	var runningStandAlone = navigator.standalone;
 	var userDismissed = cookie.get('smartbanner-closed');
 	var userInstalled = cookie.get('smartbanner-installed');
@@ -103,7 +103,7 @@ SmartBanner.prototype = {
 
 	create: function () {
 		var link = this.getStoreLink();
-		var inStore = this.options.price[this.type] + ' - ' + this.options.store[this.type];
+		var inStore = this.options.price[this.type] + this.options.store[this.type];
 		var icon;
 
 		if (this.options.icon) {
@@ -124,22 +124,22 @@ SmartBanner.prototype = {
 
 		sb.className = 'smartbanner smartbanner-' + theme;
 		sb.innerHTML = '<div class="smartbanner-container">' +
-							'<a href="javascript:void(0);" class="smartbanner-close">&times;</a>' +
-							'<span class="smartbanner-icon" style="background-image: url(' + icon + ')"></span>' +
-							'<div class="smartbanner-info">' +
-								'<div class="smartbanner-title">' + this.options.title + '</div>' +
-								'<div>' + this.options.author + '</div>' +
-								'<span>' + inStore + '</span>' +
-							'</div>' +
-							'<a href="' + link + '" class="smartbanner-button">' +
-								'<span class="smartbanner-button-text">' + this.options.button + '</span>' +
-							'</a>' +
-						'</div>';
+			'<a href="javascript:void(0);" class="smartbanner-close">&times;</a>' +
+			'<span class="smartbanner-icon" style="background-image: url(' + icon + ')"></span>' +
+			'<div class="smartbanner-info">' +
+			'<div class="smartbanner-title">' + this.options.title + '</div>' +
+			'<div>' + this.options.author + '</div>' +
+			'<span>' + inStore + '</span>' +
+			'</div>' +
+			'<a href="' + link + '" class="smartbanner-button">' +
+			'<span class="smartbanner-button-text">' + this.options.button + '</span>' +
+			'</a>' +
+			'</div>';
 
 		// there isn’t neccessary a body
 		if (doc.body) {
 			doc.body.appendChild(sb);
-		}		else if (doc) {
+		} else if (doc) {
 			doc.addEventListener('DOMContentLoaded', function () {
 				doc.body.appendChild(sb);
 			});
